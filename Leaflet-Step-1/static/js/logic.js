@@ -20,22 +20,16 @@ function changeColor(feature) {
     let depth = feature.geometry.coordinates[2];
 
     if (depth > 90) {
-        return "purple";
+        return "red";
     }
     else if (depth > 50) {
-        return "blue";
-    }
-    else if (depth > 30) {
-        return "green";
+        return "orange";
     }
     else if (depth > 10) {
         return "yellow";
     }
-    else if (depth >5) {
-        return "orange";
-    }
     else {depth 
-        return "red";
+        return "green";
     }
 }
 
@@ -99,7 +93,28 @@ function createMap(earthquakes) {
 
   // Create a layer control that contains our baseMaps.
   // Be sure to add an overlay Layer that contains the earthquake GeoJSON.
-  L.control.layers(baseMaps, overlayMaps, {
-    collapsed: false
-  }).addTo(myMap);
+  L.control.layers(baseMaps)
+  .addTo(myMap);
+
+   // Map Legend
+   var legend = L.control({position: 'bottomright'});
+
+   legend.onAdd = function (map) {
+ 
+     var div = L.DomUtil.create('div', 'info legend'),
+         grades = [-10, 10, 50, 90],
+         colors = ['green','yellow','orange','red'];
+
+     // loop through our density intervals and generate a label with a colored square for each interval
+     for (var i = 0; i < grades.length; i++) {
+         div.innerHTML +=
+             '<i style="background:' + colors[i] + '"></i> ' +
+             grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+     }
+ 
+     return div;
+  };
+ 
+  legend.addTo(myMap);
+
 }
